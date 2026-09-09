@@ -14,6 +14,7 @@
  */
 export const STORAGE_KEY="brewlog.passport.v1";
 export const DRAFT_KEY=STORAGE_KEY+".draft";
+export const PREFS_KEY=STORAGE_KEY+".prefs";
 /** @param {any} e @returns {boolean} */
 export function isQuotaError(e){return !!e&&(e.name==="QuotaExceededError"||e.code===22||(typeof e.message==="string"&&/quota/i.test(e.message||"")))}
 /** @param {any} v @returns {boolean} */
@@ -68,3 +69,15 @@ const n=String(q||"").trim().toLowerCase();
 if(!n)return a;
 return a.filter(e=>(e.name+" "+e.city+" "+e.drink).toLowerCase().includes(n))
 }
+/** @param {Entry[]} cur @param {any} list @returns {{merged:Entry[],imported:number,skipped:number}} */
+export function mergeImport(cur,list){
+const seen=new Set(cur.map(e=>e.id));
+const merged=[...cur];
+let imported=0,skipped=0;
+for(const e of sanitizeEntries(list)){if(seen.has(e.id)){skipped++;continue}seen.add(e.id);merged.push(e);imported++}
+return{merged,imported,skipped}
+}
+/** @param {any} s @returns {{mode:"all"|"top",sort:"newest"|"city"|"rating",q:string}} */
+export function loadPrefs(s=globalThis.localStorage){try{const v=JSON.parse(s.getItem(PREFS_KEY))||{};return{mode:v.mode==="top"?"top":"all",sort:v.sort==="city"||v.sort==="rating"?v.sort:"newest",q:String(v.q||"")}}catch{return{mode:"all",sort:"newest",q:""}}}
+/** @param {any} s @param {{mode:string,sort:string,q:string}} p @returns {void} */
+export function savePrefs(s=globalThis.localStorage,p){try{s.setItem(PREFS_KEY,JSON.stringify({mode:p.mode,sort:p.sort,q:String(p.q||"")}))}catch{}}

@@ -1,6 +1,6 @@
 import test from"node:test";
 import assert from"node:assert/strict";
-import{createEntry as c,deleteEntry as d,loadEntries as l,saveEntries as s,filterSort as f,stats as t,searchEntries as q,isQuotaError as qe,sanitizeEntries as se,loadDraft as ld,saveDraft as sd,clearDraft as cd}from"../store.js";
+import{createEntry as c,deleteEntry as d,loadEntries as l,saveEntries as s,filterSort as f,stats as t,searchEntries as q,isQuotaError as qe,sanitizeEntries as se,loadDraft as ld,saveDraft as sd,clearDraft as cd,mergeImport as mi,loadPrefs as lp,savePrefs as sp}from"../store.js";
 const e=o=>c({name:"N",city:"C",drink:"D",rating:5,...o}).value;
 const eq=assert.deepEqual;
 test("store",()=>{
@@ -54,4 +54,16 @@ sd(k,{name:"N",city:"C",drink:"D",rating:9,note:""});
 assert.equal(ld(k).rating,4);
 cd(k);
 assert.equal(ld(k),null);
+});
+test("import+prefs",()=>{
+const a=e({}),b=e({});
+const r=mi([a],[b,a,{...b,id:""},{name:"junk"}]);
+assert.equal(r.imported,1);assert.equal(r.skipped,1);
+eq(r.merged.map(x=>x.id),[a.id,b.id]);
+const m={},k={getItem:x=>(x in m?m[x]:null),setItem:(x,v)=>{m[x]=v}};
+eq(lp(k),{mode:"all",sort:"newest",q:""});
+sp(k,{mode:"top",sort:"city",q:"Maple"});
+eq(lp(k),{mode:"top",sort:"city",q:"Maple"});
+sp(k,{mode:"zzz",sort:"zzz",q:7});
+eq(lp(k),{mode:"all",sort:"newest",q:"7"});
 });

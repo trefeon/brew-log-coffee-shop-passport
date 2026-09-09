@@ -125,3 +125,36 @@ button:active{transform:scale(.97)}
 .snackbar[hidden]{display:none}
 #snackMsg{font-size:.9rem}
 .undo{font:700 .9rem var(--sans);color:var(--canvas);background:var(--ink);border:2px solid var(--ink);border-radius:10px;min-height:48px;min-width:72px;padding:8px 16px;cursor:pointer}
+#importFile{font:inherit;color:var(--muted);min-height:48px;max-width:100%}
+.drow{display:flex;align-items:center;gap:var(--s2);margin-top:4px}
+.dlab{font:inherit;min-width:4.5em;font-variant-numeric:tabular-nums}
+.dbar{display:inline-block;height:10px;background:var(--accent);border-radius:99px}
+@media print{
+body{background:#fff;color:#000}
+body::before,.topbar nav,section:has(#entryForm),.controls,#snackBar,.stamp-del,.seal,footer{display:none!important}
+.topbar{position:static;background:#fff;border-bottom:2px solid #000}
+main{max-width:none;padding:0}
+.card,.stamp,#statStrip,#distStrip{background:#fff;color:#000;border-color:#000;box-shadow:none}
+#stampGrid{display:block}
+.stamp{outline:0;break-inside:avoid;margin:0 0 8px;transform:none}
+.stamp .stars,.stamp-stars,.milestone,.seal{color:#000}
+.dbar{background:#000}
+}
+.dispatch{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;max-width:1120px;margin:0 auto;padding:10px 16px 0;font:500 11px var(--mono);letter-spacing:.12em;color:var(--muted)}
+.field label{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.req,.opt{font:400 .62rem var(--mono);letter-spacing:.08em;color:var(--muted)}
+.picks{font:500 .7rem var(--mono);letter-spacing:.1em;color:var(--muted);align-self:center}
+#drinkChips button{font:500 .72rem var(--mono);text-transform:uppercase;background:#f7f1e5;border-style:dashed;border-radius:6px;padding:6px 10px}
+.rateline{display:flex;justify-content:space-between;align-items:baseline}
+#rateCount{font:600 .72rem var(--mono);letter-spacing:.08em;color:var(--accent)}
+#fNote.ruled{background-image:repeating-linear-gradient(transparent 0 27px,var(--line) 27px 28px);line-height:28px}
+.submit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.btn{border-color:#5c3516;box-shadow:0 2px 0 #3d210b}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.stamps-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px}
+.stamps-head h2{font:600 1.6rem var(--serif);margin:0}
+.inspect{font:500 .66rem var(--mono);letter-spacing:.1em;color:var(--muted)}
+.stamp-city{display:inline-block;background:#f7f1e5;border:1px dashed var(--line);border-radius:4px;padding:2px 8px}
+.stamp-note{font:italic .95rem/1.6 var(--serif)}
+.philo h2{font-size:1.4rem}
+.binding{font:400 .7rem var(--mono);letter-spacing:.08em;color:var(--muted)}

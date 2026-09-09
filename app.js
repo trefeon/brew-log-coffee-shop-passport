@@ -1,5 +1,5 @@
 // @ts-check
-import { STORAGE_KEY, createEntry, deleteEntry, loadEntries, saveEntries, filterSort, stats, searchEntries, isQuotaError, sanitizeEntries, loadDraft, saveDraft, clearDraft } from "./store.js";
+import { STORAGE_KEY, createEntry, deleteEntry, loadEntries, saveEntries, filterSort, stats, searchEntries, isQuotaError, sanitizeEntries, loadDraft, saveDraft, clearDraft, mergeImport, loadPrefs, savePrefs } from "./store.js";
 /** @typedef {{id:string,name:string,city:string,drink:string,rating:number,note:string,visitedAt:string}} Entry */
 /** @type {{entries:Entry[],filter:{mode:string,sort:string,q:string}}} */
 const state = { entries: [], filter: { mode: "all", sort: "newest", q: "" } };
@@ -25,12 +25,15 @@ function makeCard(e) {
   tx(card, "span", "seal", "VERIF").setAttribute("aria-hidden", "true");
   tx(card, "h3", "stamp-name", e.name);
   tx(card, "p", "stamp-city", e.city);
-  tx(card, "p", "stamp-drink", e.drink);
+  tx(card, "p", "stamp-drink", "Drank: " + e.drink);
   const r = Number(e.rating) || 0;
-  tx(card, "p", "stamp-stars", "★".repeat(r) + "☆".repeat(5 - r)).setAttribute("aria-label", "Rated " + r + " out of 5");
-  if (e.note && e.note.trim()) tx(card, "p", "stamp-note", e.note);
-  tx(card, "time", "stamp-date", new Date(e.visitedAt).toLocaleDateString(undefined, {month:"short",day:"numeric",year:"numeric"}));
-  tx(card, "button", "stamp-del", "Remove").dataset.id = e.id;
+  tx(card, "p", "stamp-stars", "★".repeat(r) + "☆".repeat(5 - r) + " " + r + "/5").setAttribute("aria-label", "Rated " + r + " out of 5");
+  if (e.note && e.note.trim()) tx(card, "p", "stamp-note", "\u201C" + e.note.trim() + "\u201D");
+  const ft = document.createElement("div");
+  ft.className = "meta";
+  tx(ft, "time", "stamp-date", "Visited " + new Date(e.visitedAt).toLocaleDateString(undefined, {month:"short",day:"numeric",year:"numeric"}));
+  tx(ft, "button", "stamp-del", "Remove").dataset.id = e.id;
+  card.append(ft);
   return card;
 }
 /** @returns {void} */
@@ -39,13 +42,29 @@ export function render() {
   const count = s.count;
   const avg = s.avg ?? 0;
   const hoods = new Set(state.entries.map(e => String(e.city || "").trim().toLowerCase()).filter(Boolean)).size;
-  const head = count === 1 ? "1 café in your passport" : count + " cafés in your passport";
-  $("#statStrip").textContent = count ? count + " CAFES · AVG " + avg + " · " + hoods + " NEIGHBORHOODS" : head + " · No ratings yet";
+  const head = count === 1 ? "1 visit" : count + " visits";
+  $("#statStrip").textContent = count ? "VISITS " + count + "  |  AVG RATING " + avg + " / 5  |  " + head + " across " + hoods + " neighborhood" + (hoods === 1 ? "" : "s") : "VISITS 0  |  NO RATINGS YET";
   const dist = [0, 0, 0, 0, 0, 0];
   for (const item of state.entries) { const r = item.rating; if (r >= 1 && r <= 5) dist[r]++; }
   const dp = $("#distStrip");
   dp.hidden = !count;
-  if (count) dp.textContent = "5★ " + dist[5] + " · 4★ " + dist[4] + " · 3★ " + dist[3] + " · 2★ " + dist[2] + " · 1★ " + dist[1];
+  dp.replaceChildren();
+  if (count) {
+    const mx = Math.max(1, dist[1], dist[2], dist[3], dist[4], dist[5]);
+    for (let s = 5; s >= 1; s--) {
+      const row = document.createElement("div");
+      row.className = "drow";
+      const lab = document.createElement("span");
+      lab.className = "dlab";
+      lab.textContent = s + "★ " + dist[s];
+      const bar = document.createElement("span");
+      bar.className = "dbar";
+      bar.setAttribute("aria-hidden", "true");
+      bar.style.width = (dist[s] / mx * 100) + "%";
+      row.append(lab, bar);
+      dp.append(row);
+    }
+  }
   const mark = count >= 25 ? 25 : count >= 10 ? 10 : 0;
   const ms = $("#milestone");
   ms.hidden = !mark;
@@ -115,6 +134,15 @@ function showSnack(msg) {
   snackTimer = setTimeout(() => { $("#snackBar").hidden = true; }, 6000);
 }
 /** @returns {void} */
+function onRate() {
+  const v = Number(form.querySelector('input[name="rating"]:checked')?.value || 0);
+  $("#rateCount").textContent = v + " / 5 STARS";
+  form.querySelectorAll("#fRating .rate").forEach((/** @type {any} */ lb, i) => {
+    lb.classList.toggle("on", i < v);
+    lb.querySelector("span").textContent = i < v ? "★" : "☆";
+  });
+}
+/** @returns {void} */
 function onUndo() {
   if (!lastRemoved) return;
   const found = lastRemoved;
@@ -129,6 +157,7 @@ function onUndo() {
 /** @returns {void} */
 function onSearch() {
   state.filter.q = $("#searchBox").value;
+  try { savePrefs(localStorage, state.filter); } catch {}
   render();
 }
 /** @returns {void} */
@@ -143,8 +172,27 @@ function onExport() {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 /** @returns {void} */
+function onImport() {
+  const pick = /** @type {any} */ ($("#importFile"));
+  const f = pick.files && pick.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const out = mergeImport(state.entries, JSON.parse(String(rd.result)));
+      state.entries = out.merged;
+      persist();
+      render();
+      showSnack("Imported " + out.imported + ", skipped " + out.skipped + ".");
+    } catch { showSnack("Import failed, bad JSON file."); }
+    pick.value = "";
+  };
+  rd.readAsText(f);
+}
+/** @returns {void} */
 function onView() {
   state.filter = { mode: $("#filterMode").value, sort: $("#sortMode").value, q: state.filter.q };
+  try { savePrefs(localStorage, state.filter); } catch {}
   render();
 }
 /** @returns {void} */
@@ -166,16 +214,26 @@ function restoreDraft() {
 /** @returns {void} */
 function init() {
   try { state.entries = sanitizeEntries(loadEntries(localStorage)) || []; } catch {}
+  try {
+    const p = loadPrefs(localStorage);
+    state.filter = { mode: p.mode, sort: p.sort, q: p.q };
+    $("#filterMode").value = p.mode;
+    $("#sortMode").value = p.sort;
+    $("#searchBox").value = p.q;
+  } catch {}
   restoreDraft();
+  onRate();
   form.onsubmit = onSubmit;
   form.oninput = onDraft;
   grid.onclick = onGridClick;
   $("#drinkChips").onclick = onChips;
   $("#filterMode").onchange = onView;
+  $("#fRating").onchange = onRate;
   $("#sortMode").onchange = onView;
   $("#searchBox").oninput = onSearch;
   $("#undoBtn").onclick = onUndo;
   $("#exportBtn").onclick = onExport;
+  $("#importFile").onchange = onImport;
   render();
 }
 init();

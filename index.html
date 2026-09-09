@@ -11,59 +11,69 @@
 <span class="brand"><svg class="wordmark" viewBox="0 0 132 32" role="img" aria-label="Brew Log, Coffee Passport"><circle cx="15" cy="16" r="12.5" fill="none" stroke="#7c4a21" stroke-width="1.5" stroke-dasharray="3 2"/><path d="M10 11h9v5a4 4 0 0 1-4 4h-2a3 3 0 0 1-3-3zM19 12.5h1.5a2 2 0 0 1 0 4H19M9 23h12" fill="none" stroke="#2b2118" stroke-width="1.5" stroke-linecap="round"/><text x="32" y="13.5" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="8.5" letter-spacing="1" fill="#7c4a21">BREW LOG</text><text x="32" y="25" font-family="Georgia,serif" font-size="10.5" fill="#2b2118">Coffee Passport</text></svg></span>
 <nav class="topnav"><a href="#entryForm">Log a visit</a><a href="#stampGrid">Passport</a></nav>
 </header>
+<p class="dispatch"><span>● DISPATCH No. 4882 // EDITION ARCHIVE</span><span>OFFLINE REPOSITORY</span></p>
 <main id="app">
-<p class="lede">Log every cafe visit and keep what made each one special.</p>
-<p class="eyebrow">ENTRY PROTOCOL // FIELD LOG</p>
 <section class="card" aria-labelledby="formTitle">
-<h2 id="formTitle">Stamp a new cafe</h2>
+<p class="eyebrow">ENTRY PROTOCOL // FIELD LOG</p>
+<h2 id="formTitle">Log a visit</h2>
+<p class="lede">Thirty seconds, while the cup is still warm.</p>
 <form id="entryForm" novalidate>
+<div class="row">
 <div class="field">
-<label for="fName">Cafe name</label>
-<input id="fName" name="name" type="text" maxlength="80" placeholder="Sunbeam Coffee" autocomplete="off" required>
+<label for="fName">Cafe name <span class="req">REQUIRED</span></label>
+<input id="fName" name="name" type="text" maxlength="80" placeholder="Maple and Main" autocomplete="off" required>
+<p class="hint">The name on the door or awning.</p>
 </div>
 <div class="field">
-<label for="fCity">City or neighborhood</label>
-<input id="fCity" name="city" type="text" maxlength="80" placeholder="Maple District" autocomplete="off" required>
+<label for="fCity">City or neighborhood <span class="req">REQUIRED</span></label>
+<input id="fCity" name="city" type="text" maxlength="80" placeholder="Riverside, 5th Street" autocomplete="off" required>
+<p class="hint">Somewhere you can find again.</p>
+</div>
 </div>
 <div class="field">
-<label for="fDrink">Drink ordered</label>
-<input id="fDrink" name="drink" type="text" maxlength="80" placeholder="Flat White" autocomplete="off" required>
-<div id="drinkChips" class="chips" aria-label="Drink presets">
-<button type="button" class="chip" data-drink="Flat White">Flat White</button>
+<label for="fDrink">Drink ordered <span class="req">REQUIRED</span></label>
+<input id="fDrink" name="drink" type="text" maxlength="80" placeholder="Cortado (or tap a quick-pick chip)" autocomplete="off" required>
+<p class="hint">What was in the cup.</p>
+<div id="drinkChips" class="chips">
+<span class="picks">QUICK PICKS:</span>
+<button type="button" class="chip" data-drink="Espresso">Espresso</button>
 <button type="button" class="chip" data-drink="Cortado">Cortado</button>
-<button type="button" class="chip" data-drink="V60">V60</button>
+<button type="button" class="chip" data-drink="Flat White">Flat White</button>
+<button type="button" class="chip" data-drink="Pour Over">Pour Over</button>
 <button type="button" class="chip" data-drink="Cold Brew">Cold Brew</button>
-<button type="button" class="chip" data-drink="Cappuccino">Cappuccino</button>
-<button type="button" class="chip" data-drink="Matcha Latte">Matcha Latte</button>
 </div>
 </div>
 <div class="field">
-<span class="flabel" id="ratingLabel">Rating</span>
+<div class="rateline"><span class="flabel" id="ratingLabel">Rating *</span><span id="rateCount" aria-live="polite">4 / 5 STARS</span></div>
 <div id="fRating" class="rates" role="radiogroup" aria-labelledby="ratingLabel">
-<label class="rate"><input type="radio" name="rating" value="1">1</label>
-<label class="rate"><input type="radio" name="rating" value="2">2</label>
-<label class="rate"><input type="radio" name="rating" value="3">3</label>
-<label class="rate"><input type="radio" name="rating" value="4" checked>4</label>
-<label class="rate"><input type="radio" name="rating" value="5">5</label>
+<label class="rate"><input type="radio" name="rating" value="1" aria-label="1 star"><span aria-hidden="true">☆</span></label>
+<label class="rate"><input type="radio" name="rating" value="2" aria-label="2 stars"><span aria-hidden="true">☆</span></label>
+<label class="rate"><input type="radio" name="rating" value="3" aria-label="3 stars"><span aria-hidden="true">☆</span></label>
+<label class="rate"><input type="radio" name="rating" value="4" aria-label="4 stars" checked><span aria-hidden="true">☆</span></label>
+<label class="rate"><input type="radio" name="rating" value="5" aria-label="5 stars"><span aria-hidden="true">☆</span></label>
 </div>
+<p class="hint">Tap a star, 1 is rough, 5 is unforgettable.</p>
 </div>
 <div class="field">
-<label for="fNote">Tasting note or vibe (optional)</label>
-<textarea id="fNote" name="note" rows="2" maxlength="280" placeholder="Orange peel aroma, sunny corner seat"></textarea>
+<label for="fNote">Tasting note or vibe <span class="opt">OPTIONAL JOURNAL NOTE</span></label>
+<textarea id="fNote" class="ruled" name="note" rows="3" maxlength="280" placeholder="Honeyed espresso, sunny corner table, stayed for chapter three."></textarea>
 </div>
+<div class="submit-row">
+<span class="hint">PRESS TO VERIFY IMPRESSION</span>
 <button type="submit" class="btn">Stamp it in</button>
+</div>
 </form>
 </section>
 <section class="card controls" aria-label="Filter and sort">
 <div class="field">
-<label for="filterMode">Show</label>
+<label for="filterMode">SHOW</label>
 <select id="filterMode" class="select">
-<option value="all">All entries</option>
+<option value="all">All visits</option>
 <option value="top">4 stars and above</option>
 </select>
 </div>
 <div class="field">
-<label for="sortMode">Sort by</label>
+<label for="sortMode">ORDER</label>
 <select id="sortMode" class="select">
 <option value="newest">Newest first</option>
 <option value="city">City A to Z</option>
@@ -75,6 +85,10 @@
 <input id="searchBox" name="q" type="search" maxlength="80" placeholder="Try Maple or Cortado" autocomplete="off">
 </div>
 <button id="exportBtn" type="button" class="btn ghost">Export JSON</button>
+<div class="field">
+<label for="importFile">Import</label>
+<input id="importFile" type="file" accept=".json,application/json">
+</div>
 </section>
 <p class="eyebrow">LOGBOOK DISPATCH</p>
 <div id="statStrip" class="statstrip" aria-live="polite"></div>
@@ -88,11 +102,17 @@
 <p class="state-title" id="emptyTitle">Your passport is empty</p>
 <p class="state-desc" id="emptyDesc">Log your first cafe visit above to start the collection.</p>
 </div>
-<p class="eyebrow">ISSUED PROOF OF PASSAGE</p>
+<div class="stamps-head"><div><p class="eyebrow">ISSUED PROOF OF PASSAGE</p><h2>Your stamps</h2></div><span class="inspect">INSPECT ARCHIVE // VOL. 1</span></div>
 <section id="stampGrid" class="stamps" aria-live="polite" aria-label="Logged cafes"></section>
 <div id="snackBar" class="snackbar" role="status" hidden><span id="snackMsg"></span><button id="undoBtn" type="button" class="undo">Undo</button></div>
+<section class="card philo" aria-label="Field keeper code">
+<p class="eyebrow">LOGBOOK DISPATCH · FIELD KEEPER'S CODE</p>
+<h2>The Sensory Archive Philosophy</h2>
+<p>Each entry commits an indelible sensory moment: extraction pressure, roast development, microfoam texture, and the atmosphere of the room. No cloud syncing, no behavioral profiling. Keep your passport faithful to the cup.</p>
+<p class="binding">BINDING: COTTON CARD #300 · PRESS: HAND ROLLED</p>
+</section>
 </main>
-<footer class="colophon"><span>KEPT LOCALLY IN YOUR BROWSER. YOUR PASSPORT NEVER LEAVES THIS DEVICE.</span><span>VOL. I, FIELD REGISTERED</span></footer>
+<footer class="colophon"><span>KEPT LOCALLY IN YOUR BROWSER. YOUR PASSPORT NEVER LEAVES THIS DEVICE.</span><span>VOL. I, FIELD REGISTERED NO. 4882</span></footer>
 <script type="module" src="app.js"></script>
 </body>
 </html>
