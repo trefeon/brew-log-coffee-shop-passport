@@ -44,3 +44,9 @@ if(!n)return{count:0,avg:null};
 const s=a.reduce((t,e)=>t+e.rating,0);
 return{count:n,avg:Math.round(s/n*10)/10}
 }
+/** @param {Entry[]} a @param {string} q @returns {Entry[]} */
+export function searchEntries(a,q){
+const n=String(q||"").trim().toLowerCase();
+if(!n)return a;
+return a.filter(e=>(e.name+" "+e.city+" "+e.drink).toLowerCase().includes(n))
+}

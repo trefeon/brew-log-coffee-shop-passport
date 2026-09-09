@@ -1,6 +1,6 @@
 import test from"node:test";
 import assert from"node:assert/strict";
-import{createEntry as c,deleteEntry as d,loadEntries as l,saveEntries as s,filterSort as f,stats as t}from"../store.js";
+import{createEntry as c,deleteEntry as d,loadEntries as l,saveEntries as s,filterSort as f,stats as t,searchEntries as q}from"../store.js";
 const e=o=>c({name:"N",city:"C",drink:"D",rating:5,...o}).value;
 const eq=assert.deepEqual;
 test("store",()=>{
@@ -17,4 +17,13 @@ eq(t(g),{count:3,avg:4});
 eq(t([]),{count:0,avg:null});
 const m={},k={getItem:x=>m[x],setItem:(x,v)=>m[x]=v};
 s(k,g);eq(l(k),g);
+});
+test("search",()=>{
+const g=[e({name:"Maple and Main",city:"Riverside"}),e({city:"Old Town",drink:"Pour Over"}),e({city:"Garden District",drink:"Flat White"})];
+assert.equal(q(g,"").length,3);
+assert.equal(q(g,"   ").length,3);
+assert.equal(q(g,"maple").length,1);
+assert.equal(q(g,"OLD")[0].city,"Old Town");
+assert.equal(q(g,"pour over").length,1);
+assert.equal(q(g,"mocha").length,0);
 });

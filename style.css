@@ -105,3 +105,23 @@ button:active{transform:scale(.97)}
 }
 @media(min-width:1100px){#stampGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none;transform:none}.stamp,.stamp:nth-child(even){transform:none}}
+/* Stitch passport motifs */
+.wordmark{height:32px;width:auto;display:block;min-width:0}
+.eyebrow{font:400 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:var(--s4) 0 var(--s2)}
+.lede+.eyebrow{margin-top:0}
+#statStrip{font:400 .85rem var(--mono);color:var(--muted)}
+.stamp{position:relative}
+.stamp-name{padding-right:52px}
+.seal{position:absolute;top:10px;right:10px;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;font:700 8px var(--mono);letter-spacing:.08em;color:var(--accent);border:1.5px dashed var(--accent);border-radius:50%;outline:1px solid var(--accent);outline-offset:-4px;transform:rotate(-6deg)}
+.seal[aria-hidden="true"]{pointer-events:none}
+.colophon{display:grid;gap:4px}
+.colophon span{display:block;font:400 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:400px){.wordmark{height:26px}.topbar{flex-wrap:wrap}.seal{top:8px;right:8px}}
+.controls{display:grid;gap:var(--s3)}
+.btn.ghost{background:var(--card);color:var(--accent)}
+.diststrip{font:400 .8rem var(--mono);color:var(--muted);margin-top:var(--s2)}
+.milestone{display:inline-block;font:700 .75rem var(--mono);letter-spacing:.1em;color:var(--accent);border:1.5px dashed var(--accent);border-radius:999px;padding:8px 14px;margin:var(--s3) 0 0}
+.snackbar{position:fixed;left:16px;right:16px;bottom:16px;z-index:9;display:flex;align-items:center;justify-content:space-between;gap:var(--s3);max-width:480px;margin:0 auto;background:var(--card);border:1.5px solid var(--ink);border-radius:10px;padding:var(--s2) var(--s2) var(--s2) var(--s4);box-shadow:2px 3px 0 rgba(43,33,24,.15)}
+.snackbar[hidden]{display:none}
+#snackMsg{font-size:.9rem}
+.undo{font:700 .9rem var(--sans);color:var(--canvas);background:var(--ink);border:2px solid var(--ink);border-radius:10px;min-height:48px;min-width:72px;padding:8px 16px;cursor:pointer}
