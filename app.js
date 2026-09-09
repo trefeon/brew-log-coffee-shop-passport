@@ -1,5 +1,5 @@
 // @ts-check
-import { STORAGE_KEY, createEntry, deleteEntry, loadEntries, saveEntries, filterSort, stats, searchEntries } from "./store.js";
+import { STORAGE_KEY, createEntry, deleteEntry, loadEntries, saveEntries, filterSort, stats, searchEntries, isQuotaError, sanitizeEntries, loadDraft, saveDraft, clearDraft } from "./store.js";
 /** @typedef {{id:string,name:string,city:string,drink:string,rating:number,note:string,visitedAt:string}} Entry */
 /** @type {{entries:Entry[],filter:{mode:string,sort:string,q:string}}} */
 const state = { entries: [], filter: { mode: "all", sort: "newest", q: "" } };
@@ -66,7 +66,7 @@ export function render() {
 }
 /** @returns {void} */
 function persist() {
-  try { saveEntries(localStorage, state.entries); } catch {}
+  try { saveEntries(localStorage, state.entries); } catch (e) { if (isQuotaError(e)) showSnack("Cannot save, browser storage is full."); }
 }
 /** @param {any} e @returns {void} */
 function onSubmit(e) {
@@ -84,6 +84,7 @@ function onSubmit(e) {
   state.entries.push(result.value);
   persist();
   form.reset();
+  try { clearDraft(localStorage); } catch {}
   render();
 }
 /** @param {any} e @returns {void} */
@@ -147,9 +148,27 @@ function onView() {
   render();
 }
 /** @returns {void} */
+function onDraft() {
+  try { saveDraft(localStorage, { name: $("#fName").value, city: $("#fCity").value, drink: $("#fDrink").value, rating: Number($('input[name="rating"]:checked')?.value || 4), note: $("#fNote").value }); } catch {}
+}
+/** @returns {void} */
+function restoreDraft() {
+  let d = null;
+  try { d = loadDraft(localStorage); } catch {}
+  if (!d) return;
+  if (d.name) $("#fName").value = d.name;
+  if (d.city) $("#fCity").value = d.city;
+  if (d.drink) $("#fDrink").value = d.drink;
+  if (d.note) $("#fNote").value = d.note;
+  const r = form.querySelector('input[name="rating"][value="' + d.rating + '"]');
+  if (r) r.checked = true;
+}
+/** @returns {void} */
 function init() {
-  try { state.entries = loadEntries(localStorage) || []; } catch {}
+  try { state.entries = sanitizeEntries(loadEntries(localStorage)) || []; } catch {}
+  restoreDraft();
   form.onsubmit = onSubmit;
+  form.oninput = onDraft;
   grid.onclick = onGridClick;
   $("#drinkChips").onclick = onChips;
   $("#filterMode").onchange = onView;
