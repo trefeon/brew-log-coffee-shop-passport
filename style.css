@@ -1,0 +1,107 @@
+/* Brew Log passport booklet: warm analog stamp system */
+:root{
+--canvas:#faf5ec;--card:#fffdf7;--ink:#2b2118;--muted:#7a6a58;
+--accent:#7c4a21;--accent-soft:#e8d5bd;--danger:#8c2f1b;--danger-bg:#f7e3dc;
+--line:#e2d5c0;--r:.9rem;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+--serif:"Iowan Old Style",Georgia,"Source Serif 4",serif;
+--sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--canvas);color:var(--ink);font:1rem/1.55 var(--sans);min-width:320px}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
+background-image:radial-gradient(rgba(124,74,33,.07) 1px,transparent 1px);background-size:22px 22px}
+/* Top bar */
+.topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+padding:var(--s3) var(--s4);background:rgba(250,245,236,.94);border-bottom:2px solid var(--ink)}
+.topbar .brand{font:700 1.15rem/1.2 var(--serif);letter-spacing:.01em}
+.topbar .brand small{display:block;font:400 .72rem var(--mono);color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+.topbar nav a,.topnav a{color:var(--accent);font-weight:700;font-size:.85rem;min-height:44px;display:inline-flex;align-items:center;padding:var(--s2) var(--s3)}
+/* Page frame */
+main{max-width:1120px;margin:0 auto;padding:var(--s5) var(--s4);width:100%;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4);box-shadow:0 1px 0 rgba(43,33,24,.08)}
+h1{font:700 clamp(1.5rem,4vw,2.1rem)/1.15 var(--serif);margin:0 0 var(--s2)}
+.lede{color:var(--muted);margin:0 0 var(--s4);max-width:65ch}
+h2{font:700 1.05rem var(--serif);margin:0 0 var(--s3)}
+/* Entry form */
+#entryForm{display:grid;gap:var(--s3)}
+#entryForm .row{display:grid;gap:var(--s3)}
+.controls{min-width:0}
+.field{display:grid;gap:6px;min-width:0}
+.field label,.flabel{font-weight:700;font-size:.85rem}
+.field .hint{font-size:.78rem;color:var(--muted)}
+.field input,.field textarea,.field select{width:100%;max-width:100%;min-height:48px;padding:10px var(--s3);
+font:inherit;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px}
+.field textarea{min-height:88px;resize:vertical}
+.field input::placeholder,.field textarea::placeholder{color:#a89782}
+/* Drink preset chips */
+#drinkChips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+#drinkChips button,.chip{font:600 .85rem var(--sans);color:var(--ink);background:var(--canvas);
+border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;min-height:44px;cursor:pointer}
+#drinkChips button:hover,.chip:hover{border-color:var(--accent)}
+#drinkChips button[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
+/* Star rating radios: large tappable stars */
+#fRating{display:flex;gap:2px;border:0;padding:0;margin:0}
+#fRating legend{font-weight:700;font-size:.85rem;padding:0;margin-bottom:6px}
+#fRating label,.rate{display:inline-flex;align-items:center;justify-content:center;min-width:48px;min-height:48px;
+font-size:1.9rem;line-height:1;color:#c9b797;cursor:pointer;border-radius:8px}
+#fRating input{position:absolute;opacity:0;width:1px;height:1px}
+#fRating label:hover,#fRating label:hover~label{color:var(--accent)}
+#fRating label.on{color:var(--accent)}
+#fRating input:checked+span{color:var(--accent)}
+#fRating input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+/* Submit */
+.btn{font:700 1rem var(--sans);background:var(--accent);color:#fff;border:2px solid var(--accent);
+border-radius:10px;min-height:48px;padding:12px 20px;cursor:pointer;width:100%}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:scale(.97)}
+/* Toolbar: filter + sort + stats */
+.toolbar{display:grid;gap:var(--s3);margin:var(--s5) 0 var(--s3)}
+.filters{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:end}
+.filters .field{min-width:min(100%,180px);flex:1 1 150px}
+#filterMode,#sortMode,.select{min-height:48px;font:inherit;color:var(--ink);background:#fff;
+border:1.5px solid var(--line);border-radius:10px;padding:10px var(--s3);width:100%;max-width:100%}
+#statStrip,.statstrip{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);align-items:baseline;
+background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:var(--s3) var(--s4)}
+#statStrip .stat{font:400 .85rem var(--mono);color:var(--muted)}
+#statStrip .stat b{font-size:1.25rem;color:var(--ink);font-variant-numeric:tabular-nums}
+/* States */
+#emptyState{background:var(--card);border:2px dashed var(--ink);border-radius:var(--r);
+padding:var(--s6) var(--s4);text-align:center;color:var(--muted)}
+#emptyState .state-title{font:700 1.2rem var(--serif);color:var(--ink);margin:0 0 var(--s2)}
+#emptyState p{margin:0 auto;max-width:46ch}
+#errorBanner{background:var(--danger-bg);color:var(--danger);border:1.5px solid var(--danger);
+border-left-width:6px;border-radius:10px;padding:var(--s3) var(--s4);text-align:left;margin-bottom:var(--s4)}
+#errorBanner strong{display:block;font-size:.95rem}
+#errorBanner p{margin:4px 0 0}
+/* Stamp grid + cards */
+#stampGrid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s4);margin-top:var(--s3)}
+.stamp{background:var(--card);border:1px solid var(--ink);outline:1px dashed var(--muted);outline-offset:-7px;
+border-radius:6px;padding:20px var(--s4) var(--s4);min-width:0;transform:rotate(-.4deg);box-shadow:2px 3px 0 rgba(43,33,24,.15)}
+.stamp:nth-child(even){transform:rotate(.4deg)}
+.stamp h3,.stamp-name{font:700 1.1rem/1.3 var(--serif);margin:0;overflow-wrap:anywhere}
+.stamp .city,.stamp-city{font:600 .75rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:2px 0 var(--s2)}
+.stamp .drink,.stamp-drink{font-size:.9rem;margin:0 0 2px}
+.stamp .drink b,.stamp-drink b{font-weight:700}
+.stamp .stars,.stamp-stars{color:var(--accent);font-size:1.05rem;letter-spacing:.12em;margin:2px 0 var(--s2)}
+.stamp .note,.stamp-note{font-size:.92rem;color:var(--ink);margin:0 0 var(--s3);overflow-wrap:anywhere}
+.stamp .meta{display:flex;align-items:center;justify-content:space-between;gap:var(--s2)}
+.stamp time,.stamp-date{font:400 .75rem var(--mono);color:var(--muted)}
+.stamp-del{background:none;border:0;color:var(--muted);font:600 .85rem var(--sans);
+text-decoration:underline;min-height:44px;min-width:44px;padding:8px 4px;cursor:pointer}
+.stamp-del:hover{color:var(--danger)}
+/* Footer */
+footer{max-width:1120px;margin:0 auto;padding:0 var(--s4) var(--s6);color:var(--muted);font-size:.85rem;text-align:center}
+/* Focus + motion */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:active{transform:scale(.97)}
+.stamp-del:active{transform:scale(.97)}
+@media(min-width:640px){#entryForm .row{grid-template-columns:1fr 1fr}.btn{width:auto;justify-self:start}}
+@media(min-width:768px){
+#stampGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.toolbar{position:sticky;top:57px;z-index:4;background:var(--canvas);padding:var(--s2) 0}}
+}
+@media(min-width:1100px){#stampGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none;transform:none}.stamp,.stamp:nth-child(even){transform:none}}

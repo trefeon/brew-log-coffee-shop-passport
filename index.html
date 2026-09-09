@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brew Log: Coffee Shop Passport</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+<span class="brand">Brew Log</span>
+<nav class="topnav"><a href="#entryForm">Log a visit</a><a href="#stampGrid">Passport</a></nav>
+</header>
+<main id="app">
+<p class="lede">Log every cafe visit and keep what made each one special.</p>
+<section class="card" aria-labelledby="formTitle">
+<h2 id="formTitle">Stamp a new cafe</h2>
+<form id="entryForm" novalidate>
+<div class="field">
+<label for="fName">Cafe name</label>
+<input id="fName" name="name" type="text" maxlength="80" placeholder="Sunbeam Coffee" autocomplete="off" required>
+</div>
+<div class="field">
+<label for="fCity">City or neighborhood</label>
+<input id="fCity" name="city" type="text" maxlength="80" placeholder="Maple District" autocomplete="off" required>
+</div>
+<div class="field">
+<label for="fDrink">Drink ordered</label>
+<input id="fDrink" name="drink" type="text" maxlength="80" placeholder="Flat White" autocomplete="off" required>
+<div id="drinkChips" class="chips" aria-label="Drink presets">
+<button type="button" class="chip" data-drink="Flat White">Flat White</button>
+<button type="button" class="chip" data-drink="Cortado">Cortado</button>
+<button type="button" class="chip" data-drink="V60">V60</button>
+<button type="button" class="chip" data-drink="Cold Brew">Cold Brew</button>
+<button type="button" class="chip" data-drink="Cappuccino">Cappuccino</button>
+<button type="button" class="chip" data-drink="Matcha Latte">Matcha Latte</button>
+</div>
+</div>
+<div class="field">
+<span class="flabel" id="ratingLabel">Rating</span>
+<div id="fRating" class="rates" role="radiogroup" aria-labelledby="ratingLabel">
+<label class="rate"><input type="radio" name="rating" value="1">1</label>
+<label class="rate"><input type="radio" name="rating" value="2">2</label>
+<label class="rate"><input type="radio" name="rating" value="3">3</label>
+<label class="rate"><input type="radio" name="rating" value="4" checked>4</label>
+<label class="rate"><input type="radio" name="rating" value="5">5</label>
+</div>
+</div>
+<div class="field">
+<label for="fNote">Tasting note or vibe (optional)</label>
+<textarea id="fNote" name="note" rows="2" maxlength="280" placeholder="Orange peel aroma, sunny corner seat"></textarea>
+</div>
+<button type="submit" class="btn">Stamp it in</button>
+</form>
+</section>
+<section class="card controls" aria-label="Filter and sort">
+<div class="field">
+<label for="filterMode">Show</label>
+<select id="filterMode" class="select">
+<option value="all">All entries</option>
+<option value="top">4 stars and above</option>
+</select>
+</div>
+<div class="field">
+<label for="sortMode">Sort by</label>
+<select id="sortMode" class="select">
+<option value="newest">Newest first</option>
+<option value="city">City A to Z</option>
+<option value="rating">Top rated</option>
+</select>
+</div>
+</section>
+<div id="statStrip" class="statstrip" aria-live="polite"></div>
+<div id="errorBanner" class="state-card error" role="alert" hidden>
+<strong>Could not save this entry</strong>
+<p id="errorMsg"></p>
+</div>
+<div id="emptyState" class="state-card empty">
+<p class="state-title">Your passport is empty</p>
+<p class="state-desc">Log your first cafe visit above to start the collection.</p>
+</div>
+<section id="stampGrid" class="stamps" aria-live="polite" aria-label="Logged cafes"></section>
+</main>
+<footer><span>Brew Log keeps your cafe memories in this browser.</span></footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
